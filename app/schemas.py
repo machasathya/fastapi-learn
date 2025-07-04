@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel,EmailStr
 from typing import Optional, List
 
 
@@ -14,6 +14,24 @@ class PostUpdate(BaseModel):
     published: Optional[bool] = None
 
 class PostOut(BaseModel):
+    id : int
     title: str
     content: str
     published: bool
+
+
+
+class User(BaseModel):
+    email : EmailStr
+    password :str
+    
+class UserOut(BaseModel):
+    id: int
+    email : EmailStr
+
+
+
+
+class LoginCred(BaseModel):
+    email : EmailStr
+    password : str
