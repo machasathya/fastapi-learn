@@ -1,5 +1,5 @@
 from fastapi import Depends,HTTPException,status,APIRouter
-from app import database,models,schemas
+from app import database,models,schemas,oauth2
 from app.database import get_db
 from sqlalchemy.orm import Session
 
@@ -14,10 +14,10 @@ def get_posts(db: Session = Depends(get_db)):
 
 #CREATE POST
 @router.post("/create-post")
-def create_post(post : schemas.PostCreate, db: Session = Depends(get_db)):
+def create_post(post : schemas.PostCreate, db: Session = Depends(get_db),current_user: schemas.User = Depends(oauth2.get_current_user)):
     # Convert Pydantic model to SQLAlchemy model
     db_post = models.Posts(**post.dict())
-
+    print(current_user)
     db.add(db_post)
     db.commit()
     db.refresh(db_post)
