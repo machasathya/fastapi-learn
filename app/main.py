@@ -64,11 +64,11 @@ def read_root():
     return {"message": "Welcome to the FastAPI application!"}   
 
 
-
+#------------------------Database Connection-----------------------
 #GET POSTS
-from sqlalchemy.orm import Session
 
-@app.get("/posts")
+
+@app.get("/posts",response_model=list[schemas.PostOut])
 def get_posts(db: Session = Depends(get_db)):
     post = db.query(models.Posts).all()
     return post
@@ -88,7 +88,7 @@ def create_post(post : schemas.PostCreate, db: Session = Depends(get_db)):
 
 
 #get post by id
-@app.get("/posts/{id}")
+@app.get("/posts/{id}",response_model=schemas.PostOut)
 def get_post(id: int,db : Session = Depends(get_db)):
     post = db.query(models.Posts).filter(models.Posts.id == id).first()
     if not post :
@@ -100,10 +100,12 @@ def get_post(id: int,db : Session = Depends(get_db)):
 # update post
 @app.put("/posts/{id}")
 def update_post(id: int,post : schemas.PostUpdate,db : Session = Depends(get_db)):
-    db_posts = db.query(models.posts).filter(models.Posts.id == id).first()
+    db_posts = db.query(models.Posts).filter(models.Posts.id == id).first()
     if not db_posts:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Post not found") 
-    db_posts.update(post.dict(exclude_unset=True))
+    post_data = post.model_dump(exclude_unset=True)
+    for key, value in post_data.items():
+        setattr(db_posts, key, value)
     db.commit() 
     db.refresh(db_posts)
     return db_posts
