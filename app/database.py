@@ -1,8 +1,9 @@
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker 
+from app.config import settings
 
-sql_database_url = "mysql+pymysql://root:Macha123@localhost:3306/demo_db"
+sql_database_url =f"mysql+pymysql://{settings.MYSQL_USER}:{settings.MYSQL_PASSWORD}@{settings.MYSQL_HOST}/{settings.MYSQL_DB_NAME}"
 engine = create_engine(sql_database_url, echo=True)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine) 
 Base = declarative_base()

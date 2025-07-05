@@ -1,8 +1,7 @@
 from .database import Base
 from sqlalchemy import Column, Integer, String, Boolean,ForeignKey
-from sqlalchemy.sql import func, text
+from sqlalchemy.sql import func
 from sqlalchemy.types import TIMESTAMP
-from sqlalchemy.orm import Relationship
 from sqlalchemy.orm import relationship
 
 
@@ -25,3 +24,10 @@ class Users(Base):
     password = Column(String(225),nullable =False)
     created_at = Column(TIMESTAMP(timezone=True), server_default=func.now(), nullable=False)    
     posts = relationship("Posts", back_populates="owner")
+
+
+class Votes(Base):
+    __tablename__ = "votes"
+
+    post_id = Column(Integer, ForeignKey("posts.id", ondelete="CASCADE"), primary_key=True)
+    user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), primary_key=True)

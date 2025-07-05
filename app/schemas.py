@@ -1,5 +1,6 @@
 from pydantic import BaseModel,EmailStr
-from typing import Optional, List
+from typing import Optional
+from pydantic.types import conint
 
 class User(BaseModel):
     email : EmailStr
@@ -7,9 +8,10 @@ class User(BaseModel):
     
 class UserOut(BaseModel):
     id: int
-    email : EmailStr
+    email: str
+
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class PostCreate(BaseModel):
@@ -23,14 +25,14 @@ class PostUpdate(BaseModel):
     published: Optional[bool] = None
 
 class PostOut(BaseModel):
-    id : int
+    id: int
     title: str
     content: str
     published: bool
-    owner_id : int
-    owner : UserOut
+    owner: UserOut  # Make sure this matches
+
     class Config:
-        orm_mode = True
+        from_attributes = True  
 
 
 
@@ -48,4 +50,6 @@ class Token(BaseModel):
 class TokenData(BaseModel):
     id: int | None = None
 
-
+class Vote(BaseModel):
+    post_id: int
+    dir: conint(ge=0, le=1)

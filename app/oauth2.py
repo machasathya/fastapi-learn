@@ -1,16 +1,16 @@
 from fastapi import Depends,HTTPException
 from jose import jwt,JWTError
 from fastapi import Depends,HTTPException,status
-from sqlalchemy.orm import Session
+
 from app import schemas
-from app.database import get_db
+from app.config import settings
 from datetime import datetime, timedelta, timezone
 from fastapi.security.oauth2 import OAuth2PasswordBearer
 
 
-SECRET_KEY = "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7"
-ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
+SECRET_KEY = settings.SECRERT_KEY
+ALGORITHM = settings.ALGORITHM
+ACCESS_TOKEN_EXPIRE_MINUTES = settings.ACCESS_TOKEN_EXPIRE_MINUTES
 
 
 
